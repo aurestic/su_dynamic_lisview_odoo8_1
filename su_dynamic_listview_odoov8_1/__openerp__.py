@@ -1,16 +1,23 @@
+# -*- coding: utf-8 -*-
+# © 2017 truongdung
+# © 2018 Diagram Software S.L.
+
 {
     'name': 'Dynamic ListView Advance Odoo8',
     'summary': 'Change The Odoo List view On the fly without any technical knowledge',
-    'version': '1.0',
+    'version': '8.0.1.0',
     'category': 'Web',
     'description': """
         Dynamic ListView Advance Odoo8
     """,
-    'author': "truongdung.vd@gmail.com",
+    'author': "truongdung <truongdung.vd@gmail.com>"
+              "Diagram Software, S.L.",
     'depends': ['web'],
-    'data': ['views/templates.xml',
-             'security/show_fields_security.xml',
-             'security/ir.model.access.csv'],
+    'data': [
+        'views/templates.xml',
+        'security/show_fields_security.xml',
+        'security/ir.model.access.csv'
+    ],
     'price': 250,
     'currency': 'EUR',
     'installable': True,

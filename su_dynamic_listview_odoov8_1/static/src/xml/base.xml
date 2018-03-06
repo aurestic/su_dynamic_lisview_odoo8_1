@@ -29,7 +29,7 @@
                         <div class="su_dropdown">
                             <ul class="o_filters_menu" id="ul_fields_show" role="menu">
                                 <t t-foreach="widget.visible_columns" t-as="field">
-                                    <li class="selected" t-att-name="field.name">
+                                    <li class="selected" t-att-name="field.name" t-if="field.name">
                                         <span class="span_ticked">&#xf00c;</span>
                                         <a><t t-esc="field.string or ' '" /></a>
                                         <input type="text" t-att-value="field.string or ' '" />
