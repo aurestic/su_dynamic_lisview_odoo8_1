@@ -36,14 +36,12 @@
                                         <t t-set="record" t-value="_record.push(field.name)" />
                                     </li>
                                 </t>
-                                <t t-set="fields_get" t-value="widget.fields_view.fields_get" />
+                                <t t-set="fields_get" t-value="widget.fields_view.fields_get or {}" />
                                 <t t-foreach="fields_get" t-as="field">
                                     <t t-if="_record.indexOf(field) == -1">
                                         <li t-att-name="field">
                                             <span>&#xf00c;</span>
-                                            <a>
-                                                <t t-esc="fields_get[field].string" />
-                                            </a>
+                                            <a><t t-esc="fields_get[field].string" /></a>
                                             <input type="text" t-att-value="fields_get[field].string" />
                                         </li>
                                     </t>
