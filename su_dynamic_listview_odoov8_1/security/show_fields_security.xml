@@ -2,7 +2,7 @@
 <openerp>
     <data noupdate="0">
         <record id="group_show_field" model="res.groups">
-            <field name="name">Show Fields</field>
+            <field name="name">Manage Shown Fields</field>
         </record>
     </data>
 </openerp>

@@ -21,7 +21,7 @@ class ShowField(models.Model):
 
     fields_show = fields.Char(string='Fields Show', default='[]')
     model = fields.Char(string='Model Name')
-    view_id = fields.Many2one(string='View id', comodel_name='ir.ui.view')
+    view_id = fields.Many2one(string='View', comodel_name='ir.ui.view')
     for_all_user = fields.Boolean(string='Apply for All Users', default=False)
 
     @api.one
@@ -32,22 +32,22 @@ class ShowField(models.Model):
         fields_show = literal_eval(self.fields_show)
         if not isinstance(fields_show, (list,)):
             raise ValidationError(
-                _('__MSG__WRONG_FORMAT: %s') % (fields_show,))
+                _('Wrong definition format: %s') % (fields_show,))
 
         req_attrs = set(['name', 'string', 'sequence'])
         for field in fields_show:
             if not req_attrs.issubset(field):
                 raise ValidationError(
-                    _('__MSG__WRONG_FIELD_DEFINITION: %s') % (field,))
+                    _('Wrong field definition: %s') % (field,))
             if not field['name']:
                 raise ValidationError(
-                    _('__MSG__NO_FIELD_NAME: %s') % (field,))
+                    _('Field name not found: %s') % (field,))
             if not IrModelFields.search([
                 ('model', '=', self.model),
                 ('name', '=', field['name'])
             ], limit=1):
                 raise ValidationError(
-                    _('__MSG__UNKNOWN_FIELD: %s') % (field['name'],))
+                    _('Unknown field: %s') % (field['name'],))
 
     @api.model
     def change_fields(self, values):
