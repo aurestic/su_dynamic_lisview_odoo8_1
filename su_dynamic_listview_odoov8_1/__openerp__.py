@@ -5,12 +5,12 @@
 {
     'name': 'Dynamic ListView Advance Odoo8',
     'summary': 'Change The Odoo List view On the fly without any technical knowledge',
-    'version': '8.0.1.0',
+    'version': '8.0.1.1',
     'category': 'Web',
     'description': """
         Dynamic ListView Advance Odoo8
     """,
-    'author': "truongdung <truongdung.vd@gmail.com>"
+    'author': "truongdung <truongdung.vd@gmail.com>, "
               "Diagram Software, S.L.",
     'depends': ['web'],
     'data': [
