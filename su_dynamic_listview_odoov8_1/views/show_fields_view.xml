@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="show_field_view_form" model="ir.ui.view">
+            <field name="model">show.field</field>
+            <field name="arch" type="xml">
+                <form string="Custom List View Fields" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <field name="model"/>
+                            <field name="view_id"/>
+                            <field name="for_all_user"/>
+                            <field name="fields_show"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="show_field_view_tree" model="ir.ui.view">
+            <field name="model">show.field</field>
+            <field name="arch" type="xml">
+                <tree string="Custom List View Fields" create="false">
+                    <field name="model"/>
+                    <field name="view_id"/>
+                    <field name="for_all_user"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_show_field" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Custom List View Fields</field>
+            <field name="res_model">show.field</field>
+        </record>
+
+        <menuitem id="menu_show_field"
+            name="Custom List View Fields"
+            parent="base.next_id_2"
+            action="action_show_field"
+            sequence="10"/>
+
+    </data>
+</openerp>

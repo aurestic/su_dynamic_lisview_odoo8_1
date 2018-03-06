@@ -1,0 +1,128 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* su_dynamic_listview_odoov8_1
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-06 17:19+0000\n"
+"PO-Revision-Date: 2018-03-06 17:19+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: su_dynamic_listview_odoov8_1
+#. openerp-web
+#: code:addons/su_dynamic_listview_odoov8_1/static/src/xml/base.xml:21
+#: field:show.field,for_all_user:0
+#, python-format
+msgid "Apply for All Users"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: field:show.field,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: field:show.field,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: model:ir.actions.act_window,name:su_dynamic_listview_odoov8_1.action_show_field
+#: model:ir.ui.menu,name:su_dynamic_listview_odoov8_1.menu_show_field
+#: view:show.field:su_dynamic_listview_odoov8_1.show_field_view_form
+#: view:show.field:su_dynamic_listview_odoov8_1.show_field_view_tree
+msgid "Custom List View Fields"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: field:show.field,display_name:0
+msgid "Display Name"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: code:addons/su_dynamic_listview_odoov8_1/models/show_field.py:44
+#, python-format
+msgid "Field name not found: %s"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#. openerp-web
+#: code:addons/su_dynamic_listview_odoov8_1/static/src/xml/base.xml:9
+#, python-format
+msgid "Fields"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: field:show.field,fields_show:0
+msgid "Fields Show"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: field:show.field,id:0
+msgid "ID"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: field:show.field,__last_update:0
+msgid "Last Modified on"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: field:show.field,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: field:show.field,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: model:res.groups,name:su_dynamic_listview_odoov8_1.group_show_field
+msgid "Manage Shown Fields"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: field:show.field,model:0
+msgid "Model Name"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: code:addons/su_dynamic_listview_odoov8_1/models/show_field.py:50
+#, python-format
+msgid "Unknown field: %s"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#. openerp-web
+#: code:addons/su_dynamic_listview_odoov8_1/static/src/xml/base.xml:23
+#: code:addons/su_dynamic_listview_odoov8_1/static/src/xml/base.xml:25
+#: code:addons/su_dynamic_listview_odoov8_1/static/src/xml/base.xml:26
+#, python-format
+msgid "Update"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: field:show.field,view_id:0
+msgid "View"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: code:addons/su_dynamic_listview_odoov8_1/models/show_field.py:35
+#, python-format
+msgid "Wrong definition format: %s"
+msgstr ""
+
+#. module: su_dynamic_listview_odoov8_1
+#: code:addons/su_dynamic_listview_odoov8_1/models/show_field.py:41
+#, python-format
+msgid "Wrong field definition: %s"
+msgstr ""
+
