@@ -30,7 +30,6 @@ openerp.su_dynamic_listview_odoov8_1 = function (instance) {
         },
         onClickSpanCheck: function (e) {
             var $elem = $(e.currentTarget);
-            // if (e.currentTarget.className.search('span_ticked') >= 0) {
             if ($elem.hasClass('span_ticked')) {
                 $elem.parent().removeClass("selected");
                 $elem.removeClass("span_ticked");
@@ -57,7 +56,10 @@ openerp.su_dynamic_listview_odoov8_1 = function (instance) {
                 fields_show.push({
                     string: $result.find('input').val().trim(),
                     sequence: sequence,
-                    name: $result.attr("name")
+                    name: $result.attr("name"),
+                    tag: $result.attr("tag"),
+                    type: $result.attr("type"),
+                    icon: $result.attr("icon"),
                 });
                 sequence += 1;
             });
@@ -79,7 +81,6 @@ openerp.su_dynamic_listview_odoov8_1 = function (instance) {
         onClickShowField: function (e) {
             e.stopPropagation();
             var $elem = $(e.currentTarget);
-            // if (e.currentTarget.className.search('selected') < 0) {
             if (!$elem.hasClass('selected')) {
                 $elem.addClass("selected");
                 $elem.find('span').addClass("span_ticked");

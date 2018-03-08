@@ -29,7 +29,8 @@
                         <div class="su_dropdown">
                             <ul class="o_filters_menu" id="ul_fields_show" role="menu">
                                 <t t-foreach="widget.visible_columns" t-as="field">
-                                    <li class="selected" t-att-name="field.name" t-if="field.name">
+                                    <li class="selected" t-att-name="field.name" t-att-tag="field.tag"
+                                            t-att-type="field.type" t-att-icon="field.icon" t-if="field.name">
                                         <span class="span_ticked">&#xf00c;</span>
                                         <a><t t-esc="field.string or ' '" /></a>
                                         <input type="text" t-att-value="field.string or ' '" />
@@ -39,7 +40,7 @@
                                 <t t-set="fields_get" t-value="widget.fields_view.fields_get or {}" />
                                 <t t-foreach="fields_get" t-as="field">
                                     <t t-if="_record.indexOf(field) == -1">
-                                        <li t-att-name="field">
+                                        <li t-att-name="field" t-att-tag="'field'">
                                             <span>&#xf00c;</span>
                                             <a><t t-esc="fields_get[field].string" /></a>
                                             <input type="text" t-att-value="fields_get[field].string" />

@@ -8,7 +8,7 @@ import logging
 
 from openerp import SUPERUSER_ID
 from openerp import _, api, fields, models
-from openerp.exceptions import ValidationError
+from openerp.exceptions import ValidationError, Warning as UserError
 from openerp.modules.registry import RegistryManager
 
 from lxml import etree
@@ -27,27 +27,63 @@ class ShowField(models.Model):
     @api.one
     @api.constrains('fields_show', 'model')
     def _check_fields_show(self):
-        IrModelFields = self.env['ir.model.fields']
-
         fields_show = literal_eval(self.fields_show)
         if not isinstance(fields_show, (list,)):
             raise ValidationError(
                 _('Wrong definition format: %s') % (fields_show,))
 
-        req_attrs = set(['name', 'string', 'sequence'])
-        for field in fields_show:
-            if not req_attrs.issubset(field):
+        for elem in fields_show:
+            tag = elem.get('tag')
+            validator = getattr(self, '_validate_%s' % (tag,), self._validate_unknown)
+            validator(elem)
+
+    @api.model
+    def _validate_unknown(self, elem):
+        raise ValidationError(
+            _('Unknown element: %s') % (elem,))
+
+    @api.model
+    def _validate_field(self, field):
+        req_attrs = set(['tag', 'name', 'string', 'sequence'])
+        if not req_attrs.issubset(field):
+            raise ValidationError(
+                _('Wrong field definition: %s') % (field,))
+        if not field['name']:
+            raise ValidationError(
+                _('Field name not found: %s') % (field,))
+        if not self.env['ir.model.fields'].search([
+            ('model', '=', self.model),
+            ('name', '=', field['name'])
+        ], limit=1):
+            raise ValidationError(
+                _('Unknown field "%s"') % (field['name'],))
+
+    @api.model
+    def _validate_button(self, button):
+        req_attrs = set(['tag', 'name', 'string', 'sequence', 'type', 'icon'])
+        if not req_attrs.issubset(button):
+            raise ValidationError(
+                _('Wrong button definition: %s') % (button,))
+        if not button['name']:
+            raise ValidationError(
+                _('Button name not found: %s') % (button,))
+        try:
+            if button['type'] == 'action':
+                action = self.env.ref(button['name'])
+                if not action.id:
+                    raise ValidationError(
+                        _('Unknown button "%s" action.') % (button['name'],))
+            elif button['type'] == 'object':
+                Model = self.env[self.model]
+                if not hasattr(Model, button['name']):
+                    raise ValidationError(
+                        _('Unknown button "%s" method: %s.%s') % (self.mode, button['name']))
+            else:
                 raise ValidationError(
-                    _('Wrong field definition: %s') % (field,))
-            if not field['name']:
-                raise ValidationError(
-                    _('Field name not found: %s') % (field,))
-            if not IrModelFields.search([
-                ('model', '=', self.model),
-                ('name', '=', field['name'])
-            ], limit=1):
-                raise ValidationError(
-                    _('Unknown field: %s') % (field['name'],))
+                    _('Unknown button "%s" tag: %s') % (button['name'], button['tag']))
+        except ValueError as e:
+            raise ValidationError(
+                _('Unknown button "%s": %s') % (button['name'], e.message))
 
     @api.model
     def change_fields(self, values):
@@ -57,8 +93,26 @@ class ShowField(models.Model):
             ('view_id', '=', values.get('view_id', False))])
 
         fields_show = values.get('fields_show', [])
-        values['fields_show'] = repr(fields_show)
 
+        def get_xmlid(id):
+            IrActionsActWindow = self.env['ir.actions.act_window']
+            try:
+                id = int(id)
+                xmlid = IrActionsActWindow.browse(id).get_external_id()[id]
+                if not xmlid:
+                    raise UserError(
+                        _('No defined external ID for action %s.') % (id,))
+                return xmlid
+            except (ValueError, KeyError):
+                raise UserError(
+                    _('Unable to get external ID for action %s.') % (id,))
+
+        # Convert button action's integer ID to external ID
+        for elem in fields_show:
+            if elem.get('tag') == 'button' and elem.get('type') == 'action':
+                elem['name'] = get_xmlid(elem['name'])
+
+        values['fields_show'] = repr(fields_show)
         if records:
             records[0].write(values)
         else:
@@ -105,23 +159,41 @@ class ShowField(models.Model):
                         fields_show = literal_eval(shf_obj.fields_show or '[]')
                         field_base = OrderedDict()
 
-                        for _field in doc.xpath('//field'):
-                            if 'name' in _field.attrib:
-                                field_base[_field.attrib.get('name')] = _field
-                                _field.set('invisible', '1')
-                                doc.remove(_field)
+                        # Get all fields/buttons and hide them
+                        for _elem in doc.xpath('//*[self::field or self::button]'):
+                            if 'name' in _elem.attrib:
+                                field_base[_elem.attrib.get('name')] = _elem
+                                _elem.set('invisible', '1')
+                                doc.remove(_elem)
 
-                        for _field_name in fields_show:
-                            _field = field_base.pop(_field_name['name'], None)
-                            if _field is None:
-                                _field = etree.Element('field')
-                            _field.set('invisible', '0')
-                            _field.set('name', _field_name['name'])
-                            _field.set('string', _field_name['string'])
-                            doc.xpath('//tree')[0].append(_field)
+                        # Get existing fields/buttons or create new ones. Unhide them all
+                        for _attrs in fields_show:
+                            name = _attrs['name']
+                            if _attrs.get('tag') == 'button' and _attrs.get('type') == 'action':
+                                # Button action's external ID must be converted to integer ID
+                                try:
+                                    name = str(self.env.ref(_attrs['name']).id)
+                                except ValueError:
+                                    _logger.exception('Unknown action: %s', _attrs['name'])
+                                    continue
 
-                        for _field in field_base.itervalues():
-                            doc.xpath('//tree')[0].append(_field)
+                            _elem = field_base.pop(name, None)
+                            if _elem is None:
+                                _elem = etree.Element(_attrs.get('tag', 'field'))
+                                _elem.set('name', name)
+                                if _attrs.get('tag') == 'button':
+                                    _elem.set('id', _elem.get('name'))
+                                    _elem.set('type', _attrs['type'])
+                                    _elem.set('icon', _attrs['icon'])
+
+                            _elem.set('string', _attrs['string'])
+                            _elem.set('invisible', '0')
+
+                            doc.xpath('//tree')[0].append(_elem)
+
+                        # Append remaining fields/buttons. They remain hidden.
+                        for _elem in field_base.itervalues():
+                            doc.xpath('//tree')[0].append(_elem)
 
                         res['arch'] = etree.tostring(doc)
                         _arch, _fields = IrUiView.postprocess_and_fields(
