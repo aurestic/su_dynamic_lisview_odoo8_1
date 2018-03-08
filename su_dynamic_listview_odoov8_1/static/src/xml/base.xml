@@ -20,6 +20,11 @@
                                 </t>
                                 <label for="apply_for_all_user">Apply for All Users</label>
                             </t>
+                            <a title="Reset" action="reset" class="btn btn-danger reset_fields_show">
+                                <i class="fa fa-trash fa-fw" style="color: white;"
+                                   title="Reset" aria-hidden="true"></i>
+                                <span class="sr-only">Reset</span>
+                            </a>
                             <a title="Update" action="update" class="btn btn-default update_fields_show">
                                 <i class="fa fa-refresh fa-spin fa-1x fa-fw"
                                    title="Update" aria-hidden="true"></i>

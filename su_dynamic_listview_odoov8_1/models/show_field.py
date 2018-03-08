@@ -120,6 +120,14 @@ class ShowField(models.Model):
 
         return True
 
+    @api.model
+    def reset_fields(self, values):
+        return self.search([
+            ('model', '=', values.get('model', False)),
+            ('create_uid', '=', self.env.user.id),
+            ('view_id', '=', values.get('view_id', False))
+        ]).unlink()
+
     @api.cr
     def _register_hook(self, cr, ids=None):
         """

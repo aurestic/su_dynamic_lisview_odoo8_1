@@ -3,6 +3,8 @@
 openerp.su_dynamic_listview_odoov8_1 = function (instance) {
     'use strict';
 
+    var _t = instance.web._t;
+
     instance.web.ListView.include({
         load_list: function (data) {
             this._super(data);
@@ -12,6 +14,8 @@ openerp.su_dynamic_listview_odoov8_1 = function (instance) {
                 this.$buttons.on('click', '.su_fields_show li', this.proxy('onClickShowField'));
                 this.$buttons.off('click', '.update_fields_show');
                 this.$buttons.on('click', '.update_fields_show', this.proxy('updateShowField'));
+                this.$buttons.off('click', '.reset_fields_show');
+                this.$buttons.on('click', '.reset_fields_show', this.proxy('resetShowField'));
                 this.$buttons.off('keypress', '.su_dropdown li > input');
                 this.$buttons.on('keypress', '.su_dropdown li > input', this.proxy('onChangeStringField'));
                 this.$buttons.off('focusout', '.su_dropdown li > input');
@@ -77,6 +81,19 @@ openerp.su_dynamic_listview_odoov8_1 = function (instance) {
                     return self.reload_content();
                 });
             });
+        },
+        resetShowField: function () {
+            var self = this;
+            if (confirm(_t('This action cannot be undone, continue?'))) {
+                new instance.web.Model("show.field").call('reset_fields', [{
+                    model: this.model,
+                    view_id: this.fields_view.view_id,
+                }]).done(function (result) {
+                    return self.load_view(self.dataset.context).done(function () {
+                        return self.reload_content();
+                    });
+                });
+            }
         },
         onClickShowField: function (e) {
             e.stopPropagation();
