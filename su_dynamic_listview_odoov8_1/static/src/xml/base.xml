@@ -38,12 +38,13 @@
                                     </li>
                                 </t>
                                 <t t-set="fields_get" t-value="widget.fields_view.fields_get or {}" />
-                                <t t-foreach="fields_get" t-as="field">
-                                    <t t-if="_record.indexOf(field) == -1">
-                                        <li t-att-name="field" t-att-tag="'field'">
+                                <t t-foreach="fields_get" t-as="field_name">
+                                    <t t-if="_record.indexOf(field_name) == -1">
+                                        <t t-set="field" t-value="fields_get[field_name]"/>
+                                        <li t-att-name="field_name" t-att-tag="'field'" t-id="field.name">
                                             <span>&#xf00c;</span>
-                                            <a><t t-esc="fields_get[field].string" /></a>
-                                            <input type="text" t-att-value="fields_get[field].string" />
+                                            <a><t t-esc="field.string" /></a>
+                                            <input type="text" t-att-value="field.string" />
                                         </li>
                                     </t>
                                 </t>
