@@ -7,26 +7,63 @@ openerp.su_dynamic_listview_odoov8_1 = function (instance) {
 
     instance.web.ListView.include({
         load_list: function (data) {
-            this._super(data);
+            var self = this;
+            self._super(data);
 
-            if (this.$buttons.length) {
-                this.$buttons.off('click', '.su_fields_show li');
-                this.$buttons.on('click', '.su_fields_show li', this.proxy('onClickShowField'));
-                this.$buttons.off('click', '.update_fields_show');
-                this.$buttons.on('click', '.update_fields_show', this.proxy('updateShowField'));
-                this.$buttons.off('click', '.reset_fields_show');
-                this.$buttons.on('click', '.reset_fields_show', this.proxy('resetShowField'));
-                this.$buttons.off('keypress', '.su_dropdown li > input');
-                this.$buttons.on('keypress', '.su_dropdown li > input', this.proxy('onChangeStringField'));
-                this.$buttons.off('focusout', '.su_dropdown li > input');
-                this.$buttons.on('focusout', '.su_dropdown li > input', this.proxy('onFocusOutTextField'));
-                this.$buttons.off('click', '.su_fields_show li > span');
-                this.$buttons.on('click', '.su_fields_show li > span', this.proxy('onClickSpanCheck'));
-                this.$buttons.off('click', '#apply_for_all_user');
-                this.$buttons.on('click', '#apply_for_all_user', this.proxy('onClickApplyAll'));
+            var $ul = self.$buttons.find('#ul_fields_show');
 
-                this.$buttons.find('#ul_fields_show').sortable();
-                this.$buttons.find('#ul_fields_show').disableSelection();
+            if ($ul.data('state') === 'uninitialized' && self.$buttons.length) {
+                $ul.data({state: 'loading'});
+
+                var known_fields = $ul.children("li[tag='field']").map(function () {
+                    return $(this).attr('name');
+                }).get();
+
+                self.dataset.call('fields_get', [[], {
+                    context: self.dataset.context
+                }]).done(function fields_get(fields) {
+                    for (var field in fields) {
+                        if (fields.hasOwnProperty(field) && known_fields.indexOf(field) === -1) {
+                            var label = fields[field].string;
+                            $('<li/>').attr({
+                                name: field,
+                                tag: 'field',
+                            }).append(
+                                $('<span/>').html('&#xf00c;'),
+                                $('<a/>').text(label),
+                                $('<input/>').attr({type:' text', value: label})
+                            ).appendTo($ul);
+                        }
+                    }
+
+                    self.$buttons.off('click', '.su_fields_show li');
+                    self.$buttons.on('click', '.su_fields_show li', self.proxy('onClickShowField'));
+                    self.$buttons.off('click', '.update_fields_show');
+                    self.$buttons.on('click', '.update_fields_show', self.proxy('updateShowField'));
+                    self.$buttons.off('click', '.reset_fields_show');
+                    self.$buttons.on('click', '.reset_fields_show', self.proxy('resetShowField'));
+                    self.$buttons.off('keypress', '.su_dropdown li > input');
+                    self.$buttons.on('keypress', '.su_dropdown li > input', self.proxy('onChangeStringField'));
+                    self.$buttons.off('focusout', '.su_dropdown li > input');
+                    self.$buttons.on('focusout', '.su_dropdown li > input', self.proxy('onFocusOutTextField'));
+                    self.$buttons.off('click', '.su_fields_show li > span');
+                    self.$buttons.on('click', '.su_fields_show li > span', self.proxy('onClickSpanCheck'));
+                    self.$buttons.off('click', '#apply_for_all_user');
+                    self.$buttons.on('click', '#apply_for_all_user', self.proxy('onClickApplyAll'));
+
+                    self.$buttons.find('#ul_fields_show').sortable();
+                    self.$buttons.find('#ul_fields_show').disableSelection();
+
+                    $ul.data({state: 'loaded'});
+                });
+            } else if ($ul.data('state') === 'loaded') {
+                $ul.children("li").sort(function (a, b) {
+                    var $a = $(a), $b = $(b);
+                    if ($a.hasClass('selected') === $b.hasClass('selected')) {
+                        return $a.index() < $b.index() ? -1 : 1;
+                    }
+                    return $a.hasClass('selected') ? -1 : 1;
+                }).appendTo($ul);
             }
         },
         onClickApplyAll: function (e) {

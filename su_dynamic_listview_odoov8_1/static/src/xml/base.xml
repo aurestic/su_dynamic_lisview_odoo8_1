@@ -8,7 +8,7 @@
                             data-toggle="dropdown" aria-expanded="true">
                         <span class="fa fa-foursquare"></span> Fields <span class="caret"></span>
                     </button>
-                    <t t-set="_record" t-value="[]"/>
+                    <!-- <t t-set="_record" t-value="[]"/> -->
                     <div class="dropdown-menu">
                         <div class="su_action">
                             <t t-if="widget.session.uid == 1">
@@ -32,27 +32,27 @@
                             </a>
                         </div>
                         <div class="su_dropdown">
-                            <ul class="o_filters_menu" id="ul_fields_show" role="menu">
-                                <t t-foreach="widget.visible_columns" t-as="field">
-                                    <li class="selected" t-att-name="field.name" t-att-tag="field.tag"
-                                            t-att-type="field.type" t-att-icon="field.icon" t-if="field.name">
+                            <ul class="o_filters_menu" id="ul_fields_show" role="menu" data-state="uninitialized">
+                                <t t-foreach="widget.visible_columns" t-as="elem">
+                                    <li class="selected" t-att-name="elem.name" t-att-tag="elem.tag"
+                                            t-att-type="elem.type" t-att-icon="elem.icon" t-if="elem.name">
                                         <span class="span_ticked">&#xf00c;</span>
-                                        <a><t t-esc="field.string or ' '" /></a>
-                                        <input type="text" t-att-value="field.string or ' '" />
-                                        <t t-set="record" t-value="_record.push(field.name)" />
+                                        <a><t t-esc="elem.string or ' '" /></a>
+                                        <input type="text" t-att-value="elem.string or ' '" />
+                                        <!-- <t t-set="record" t-value="_record.push(elem.name)" /> -->
                                     </li>
                                 </t>
-                                <t t-set="fields_get" t-value="widget.fields_view.fields_get or {}" />
+                                <!-- <t t-set="fields_get" t-value="widget.fields_view.fields_get or {}" />
                                 <t t-foreach="fields_get" t-as="field_name">
                                     <t t-if="_record.indexOf(field_name) == -1">
                                         <t t-set="field" t-value="fields_get[field_name]"/>
-                                        <li t-att-name="field_name" t-att-tag="'field'" t-id="field.name">
+                                        <li t-att-name="field_name" t-att-tag="'field'" t-if="field.name">
                                             <span>&#xf00c;</span>
                                             <a><t t-esc="field.string" /></a>
                                             <input type="text" t-att-value="field.string" />
                                         </li>
                                     </t>
-                                </t>
+                                </t> -->
                             </ul>
                         </div>
                     </div>
