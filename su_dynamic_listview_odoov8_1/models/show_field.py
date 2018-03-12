@@ -209,7 +209,7 @@ class ShowField(models.Model):
                         res['arch'] = _arch
                         res['fields'] = _fields
 
-                res['fields_get'] = self.fields_get()
+                # res['fields_get'] = self.fields_get()
                 res['hide_button'] = hide_button
 
                 return res
