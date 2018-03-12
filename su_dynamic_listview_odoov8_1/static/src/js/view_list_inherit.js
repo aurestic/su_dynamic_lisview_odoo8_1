@@ -19,9 +19,9 @@ openerp.su_dynamic_listview_odoov8_1 = function (instance) {
                     return $(this).attr('name');
                 }).get();
 
-                self.dataset.call('fields_get', [[], {
+                new instance.web.Model(self.model).call('fields_get', [], {
                     context: self.dataset.context
-                }]).done(function fields_get(fields) {
+                }).done(function fields_get(fields) {
                     for (var field in fields) {
                         if (fields.hasOwnProperty(field) && known_fields.indexOf(field) === -1) {
                             var label = fields[field].string;
