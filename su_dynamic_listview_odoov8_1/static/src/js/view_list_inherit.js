@@ -22,18 +22,32 @@ openerp.su_dynamic_listview_odoov8_1 = function (instance) {
                 new instance.web.Model(self.model).call('fields_get', [], {
                     context: self.dataset.context
                 }).done(function fields_get(fields) {
-                    for (var field in fields) {
-                        if (fields.hasOwnProperty(field) && known_fields.indexOf(field) === -1) {
-                            var label = fields[field].string;
-                            $('<li/>').attr({
-                                name: field,
-                                tag: 'field',
-                            }).append(
-                                $('<span/>').html('&#xf00c;'),
-                                $('<a/>').text(label),
-                                $('<input/>').attr({type:' text', value: label})
-                            ).appendTo($ul);
+                    var arr = [];
+
+                    for (var key in fields) {
+                        if (fields.hasOwnProperty(key) && known_fields.indexOf(key) === -1) {
+                            arr.push([key, fields[key].string]);
                         }
+                    }
+
+                    arr.sort(function(a, b) {
+                        return (a[1] || '').localeCompare(b[1] || '');
+                    });
+
+                    for (var i = 0; i < arr.length; i++) {
+                        var field_name = arr[i][0];
+                        var field = fields[field_name];
+                        var label = field.string;
+                        $('<li/>').attr({
+                            name: field_name,
+                            tag: 'field',
+                            type: field.type,
+                        }).append(
+                            $('<span/>').html('&#xf00c;'),
+                            $('<a/>').text(label).append(
+                                $('<em/>').text(_.str.sprintf(' (%s)', field_name))),
+                            $('<input/>').attr({type:' text', value: label})
+                        ).appendTo($ul);
                     }
 
                     self.$buttons.off('click', '.su_fields_show li');

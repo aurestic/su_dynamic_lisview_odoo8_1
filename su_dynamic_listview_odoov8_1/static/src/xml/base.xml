@@ -37,7 +37,10 @@
                                     <li class="selected" t-att-name="elem.name" t-att-tag="elem.tag"
                                             t-att-type="elem.type" t-att-icon="elem.icon" t-if="elem.name">
                                         <span class="span_ticked">&#xf00c;</span>
-                                        <a><t t-esc="elem.string or ' '" /></a>
+                                        <a>
+                                            <t t-esc="elem.string or ' '" />
+                                            <em t-if="elem.name">(<t t-esc="elem.name"/>)</em>
+                                        </a>
                                         <input type="text" t-att-value="elem.string or ' '" />
                                         <!-- <t t-set="record" t-value="_record.push(elem.name)" /> -->
                                     </li>
